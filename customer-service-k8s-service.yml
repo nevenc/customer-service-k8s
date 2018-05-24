@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: customer-service
+  namespace: default
+  labels:
+    app: customer-service
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      nodePort: 31000
+      targetPort: 8080
+      protocol: TCP
+  selector:
+    app: customer-service
+  sessionAffinity: None

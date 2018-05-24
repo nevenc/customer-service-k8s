@@ -1,0 +1,30 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: customer-service
+spec:
+  replicas: 5
+  template:
+    metadata:
+      labels:
+        app: customer-service
+    spec:
+      containers:
+      -  name: customer-service
+         image: nevenc/customer-service-k8s:1.0.0
+         ports:
+           - containerPort: 8080
+         env:
+           - name: SPRING_PROFILES_ACTIVE
+             value: mysql
+           - name: SPRING_DATASOURCE_DRIVER-CLASS-NAME
+             value: com.mysql.jdbc.Driver
+           - name: spring.jpa.properties.hibernate.dialect
+             value: org.hibernate.dialect.MySQL55Dialect
+           - name: SPRING_DATASOURCE_USERNAME
+             value: user
+           - name: SPRING_DATASOURCE_PASSWORD
+             value: password
+           - name: SPRING_DATASOURCE_URL
+             value: jdbc:mysql://104.155.22.214/customers
+

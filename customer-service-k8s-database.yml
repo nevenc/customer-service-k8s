@@ -1,0 +1,48 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: customer-service-database
+  labels:
+    app: customer-service
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 3306
+      protocol: TCP
+      targetPort: 3306
+      nodePort: 31001
+  selector:
+    app: customer-service
+    tier: database
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: customer-service-database
+  labels:
+    app: customer-service
+spec:
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: customer-service
+        tier: database
+    spec:
+      containers:
+        - image: mysql:5.6
+          name: customer-service
+          env:
+            - name: MYSQL_USER
+              value: user
+            - name: MYSQL_PASSWORD
+              value: password
+            - name: MYSQL_ROOT_PASSWORD
+              value: password
+            - name: MYSQL_DATABASE
+              value: customers
+          ports:
+            - containerPort: 3306
+              name: db
